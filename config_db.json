@@ -1,0 +1,7 @@
+{
+    "host": "localhost",
+    "port": 3306,
+    "database": "db_pasien_bpjs",
+    "user": "root",
+    "password": ""
+}

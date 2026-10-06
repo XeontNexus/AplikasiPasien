@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.env
+
+# Database lokal & file runtime
+*.db
+*.sqlite3
+backups/
+*.pdf
+
+# IDE
+.vscode/
+.idea/
