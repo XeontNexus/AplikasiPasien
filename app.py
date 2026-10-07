@@ -228,6 +228,7 @@ class AplikasiPasienBPJS:
         )
         left_panel.pack(side="left", fill="y", padx=(0, 12))
         left_panel.pack_propagate(False)
+        self.left_panel = left_panel
 
         # Header Form & Badge Status Mode
         form_title_frame = tk.Frame(left_panel, bg=self.colors["card_bg"])
@@ -254,28 +255,24 @@ class AplikasiPasienBPJS:
 
         self.inputs = {}
 
-        # 1. NAMA LENGKAP PASIEN (Di awal)
+        # 1. NAMA LENGKAP PASIEN
         self.create_form_field(
             left_panel, "1. Nama Lengkap Pasien *", "nama",
             placeholder="Nama lengkap sesuai KTP"
         )
 
-        # 2. ALAMAT DOMISILI (Kedua)
+        # 2. ALAMAT DOMISILI
         self.create_form_field(
             left_panel, "2. Alamat Domisili *", "alamat",
             placeholder="Jl., RT/RW, Kelurahan, Kecamatan"
         )
 
-        # Baris Gandengan: 3. Jenis Kelamin & 4. Umur
-        row_jk_umur = tk.Frame(left_panel, bg=self.colors["card_bg"])
-        row_jk_umur.pack(fill="x", pady=(0, 7))
-
-        # 3. JENIS KELAMIN (Ketiga)
-        col_jk = tk.Frame(row_jk_umur, bg=self.colors["card_bg"])
-        col_jk.pack(side="left", fill="x", expand=True, padx=(0, 6))
+        # 3. JENIS KELAMIN
+        field_jk = tk.Frame(left_panel, bg=self.colors["card_bg"])
+        field_jk.pack(fill="x", pady=(0, 6))
 
         tk.Label(
-            col_jk,
+            field_jk,
             text="3. Jenis Kelamin *",
             font=("Segoe UI", 8, "bold"),
             fg=self.colors["text_main"],
@@ -283,7 +280,7 @@ class AplikasiPasienBPJS:
         ).pack(anchor="w", pady=(0, 2))
 
         self.combo_jk = ttk.Combobox(
-            col_jk,
+            field_jk,
             values=["Laki-laki", "Perempuan"],
             state="readonly",
             style="Custom.TCombobox",
@@ -298,19 +295,19 @@ class AplikasiPasienBPJS:
         vcmd_bpjs = (self.buat_validator_angka(14), "%P")
 
         # 4. UMUR (Tahun) - Maksimal 3 Digit Angka
-        col_umur = tk.Frame(row_jk_umur, bg=self.colors["card_bg"])
-        col_umur.pack(side="right", fill="x", expand=True, padx=(6, 0))
+        field_umur = tk.Frame(left_panel, bg=self.colors["card_bg"])
+        field_umur.pack(fill="x", pady=(0, 6))
 
         tk.Label(
-            col_umur,
-            text="4. Umur (Maks 3 Digit) *",
+            field_umur,
+            text="4. Umur (Tahun, Maks 3 Digit) *",
             font=("Segoe UI", 8, "bold"),
             fg=self.colors["text_main"],
             bg=self.colors["card_bg"]
         ).pack(anchor="w", pady=(0, 2))
 
         entry_umur = tk.Entry(
-            col_umur,
+            field_umur,
             font=("Segoe UI", 9),
             bg="#f8fafc",
             fg=self.colors["text_main"],
@@ -324,16 +321,12 @@ class AplikasiPasienBPJS:
         entry_umur.pack(fill="x", ipady=2)
         self.inputs["umur"] = entry_umur
 
-        # Baris Gandengan: 5. No. RM & 6. No. BPJS
-        row_rm_bpjs = tk.Frame(left_panel, bg=self.colors["card_bg"])
-        row_rm_bpjs.pack(fill="x", pady=(0, 10))
-
         # 5. NO. REKAM MEDIS (RM) - Maksimal 10 Digit Angka
-        col_rm = tk.Frame(row_rm_bpjs, bg=self.colors["card_bg"])
-        col_rm.pack(side="left", fill="x", expand=True, padx=(0, 6))
+        field_rm = tk.Frame(left_panel, bg=self.colors["card_bg"])
+        field_rm.pack(fill="x", pady=(0, 6))
 
         tk.Label(
-            col_rm,
+            field_rm,
             text="5. No. Rekam Medis (Maks 10 Digit) *",
             font=("Segoe UI", 8, "bold"),
             fg=self.colors["text_main"],
@@ -341,7 +334,7 @@ class AplikasiPasienBPJS:
         ).pack(anchor="w", pady=(0, 2))
 
         entry_rm = tk.Entry(
-            col_rm,
+            field_rm,
             font=("Segoe UI", 9),
             bg="#f8fafc",
             fg=self.colors["text_main"],
@@ -356,11 +349,11 @@ class AplikasiPasienBPJS:
         self.inputs["no_rm"] = entry_rm
 
         # 6. NO. KARTU BPJS - Maksimal 14 Digit Angka
-        col_bpjs = tk.Frame(row_rm_bpjs, bg=self.colors["card_bg"])
-        col_bpjs.pack(side="right", fill="x", expand=True, padx=(6, 0))
+        field_bpjs = tk.Frame(left_panel, bg=self.colors["card_bg"])
+        field_bpjs.pack(fill="x", pady=(0, 8))
 
         tk.Label(
-            col_bpjs,
+            field_bpjs,
             text="6. No. BPJS (Maks 14 Digit) *",
             font=("Segoe UI", 8, "bold"),
             fg=self.colors["text_main"],
@@ -368,7 +361,7 @@ class AplikasiPasienBPJS:
         ).pack(anchor="w", pady=(0, 2))
 
         entry_bpjs = tk.Entry(
-            col_bpjs,
+            field_bpjs,
             font=("Segoe UI", 9),
             bg="#f8fafc",
             fg=self.colors["text_main"],
@@ -640,13 +633,13 @@ class AplikasiPasienBPJS:
             self.tree.column(col_id, width=width, anchor=anchor, minwidth=45)
 
         # Scrollbar
-        vsb = ttk.Scrollbar(table_card, orient="vertical", command=self.tree.yview)
-        hsb = ttk.Scrollbar(table_card, orient="horizontal", command=self.tree.xview)
-        self.tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+        self.vsb = ttk.Scrollbar(table_card, orient="vertical", command=self.tree.yview)
+        self.hsb = ttk.Scrollbar(table_card, orient="horizontal", command=self.tree.xview)
+        self.tree.configure(yscrollcommand=self.vsb.set, xscrollcommand=self.hsb.set)
 
         self.tree.grid(row=0, column=0, sticky="nsew")
-        vsb.grid(row=0, column=1, sticky="ns")
-        hsb.grid(row=1, column=0, sticky="ew")
+        self.vsb.grid(row=0, column=1, sticky="ns")
+        self.hsb.grid(row=1, column=0, sticky="ew")
 
         table_card.grid_rowconfigure(0, weight=1)
         table_card.grid_columnconfigure(0, weight=1)
@@ -660,6 +653,67 @@ class AplikasiPasienBPJS:
         # Event Binding
         self.tree.bind("<<TreeviewSelect>>", self.on_row_selected)
         self.tree.bind("<Double-1>", self.on_row_double_click)
+
+        # Global Click Binding (Deselect & Kosongkan Form jika klik di tempat lain)
+        self.root.bind_all("<Button-1>", self.on_global_click, add="+")
+
+    def is_inside_left_panel(self, widget):
+        """Mengecek apakah widget berada di dalam panel form kiri (sidebar) atau dropdown combobox."""
+        if widget is None:
+            return False
+        # Dukungan jika widget adalah popup/drop-down combobox
+        if "popdown" in str(widget).lower():
+            return True
+        curr = widget
+        target = getattr(self, "left_panel", None)
+        while curr is not None:
+            if curr == target:
+                return True
+            try:
+                curr = curr.master
+            except Exception:
+                break
+        return False
+
+    def on_global_click(self, event):
+        """
+        Mendeteksi klik di luar form dan luar baris tabel.
+        Jika data pasien sedang dipilih di sidebar dan pengguna mengklik tempat lain
+        (seperti area kosong tabel, background, search box, header, toolbar, dll),
+        maka data pasien di sidebar akan dikosongkan (bukan terhapus dari database)
+        untuk menghindari ketidaksengajaan perubahan data.
+        """
+        # Abaikan klik pada jendela dialog/popup (misal: Detail Pasien, Sinkronisasi, Messagebox)
+        try:
+            if event.widget.winfo_toplevel() != self.root:
+                return
+        except Exception:
+            return
+
+        # Jika klik di dalam sidebar form, biarkan pengguna mengedit atau menekan tombol form
+        if self.is_inside_left_panel(event.widget):
+            return
+
+        # Abaikan klik pada scrollbar tabel
+        if event.widget in (getattr(self, "vsb", None), getattr(self, "hsb", None)):
+            return
+
+        # Jika klik pada widget tabel pasien (self.tree)
+        if event.widget == self.tree:
+            region = self.tree.identify_region(event.x, event.y)
+            row_id = self.tree.identify_row(event.y)
+            # Jika klik tepat pada baris data, biarkan seleksi tabel bekerja normal
+            if row_id and region in ("cell", "tree"):
+                return
+            # Jika klik di area kosong tabel / bukan baris data
+            if self.selected_patient_id is not None or self.tree.selection():
+                self.bersihkan_form()
+            return
+
+        # Jika klik di tempat lain mana pun (background, search box, header, toolbar)
+        # dan saat itu data pasien sedang aktif di form
+        if self.selected_patient_id is not None or self.tree.selection():
+            self.bersihkan_form()
 
     def create_form_field(self, parent, label_text, key, placeholder=""):
         """Fungsi helper untuk membuat label dan input field form secara rapi."""
